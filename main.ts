@@ -18,12 +18,7 @@ export default class MyPlugin extends Plugin {
 
 		this.registerMarkdownPostProcessor((element, c) => {
 			let text = element.textContent ?? "";
-			let lines = [];
-			let last = 0;
-			for (let i = text.indexOf("\n") ?? -1; i != -1; last = i + last + 1, text = text.substring(i + 1), i = text.indexOf("\n") ?? -1) {
-				lines.push(element.textContent?.substring(last, i + last) ?? "");
-			}
-			lines.push(element.textContent?.substring(last) ?? "");
+			let lines = text.split('\n', Number.MAX_SAFE_INTEGER);
 			let out = createDiv({text: ""});
 			for (let line of lines) {
 				out.appendChild(createDiv({text: line, attr: {style: "text-indent:55px"}}))
