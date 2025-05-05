@@ -16,10 +16,25 @@ export default class MyPlugin extends Plugin {
 	async onload() {
 		await this.loadSettings();
 
+		this.registerMarkdownPostProcessor((element, c) => {
+			let text = element.textContent ?? "";
+			let lines = [];
+			let last = 0;
+			for (let i = text.indexOf("\n") ?? -1; i != -1; last = i + last + 1, text = text.substring(i + 1), i = text.indexOf("\n") ?? -1) {
+				lines.push(element.textContent?.substring(last, i + last) ?? "");
+			}
+			lines.push(element.textContent?.substring(last) ?? "");
+			let out = createDiv({text: ""});
+			for (let line of lines) {
+				out.appendChild(createDiv({text: line, attr: {style: "text-indent:55px"}}))
+			}
+			element.replaceChildren(out);
+		});
+
 		// This creates an icon in the left ribbon.
 		const ribbonIconEl = this.addRibbonIcon('dice', 'Sample Plugin', (evt: MouseEvent) => {
 			// Called when the user clicks the icon.
-			new Notice('This is a notice!');
+			new Notice('This is a notice');
 		});
 		// Perform additional things with the ribbon
 		ribbonIconEl.addClass('my-plugin-ribbon-class');
