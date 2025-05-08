@@ -1,4 +1,4 @@
-import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, TFile } from 'obsidian';
+import { App, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
 
 // Remember to rename these classes and interfaces!
 
@@ -7,7 +7,7 @@ interface MyPluginSettings {
 }
 
 const DEFAULT_SETTINGS: MyPluginSettings = {
-	indentWidth: 55
+	indentWidth: 13
 }
 
 export default class MyPlugin extends Plugin {
@@ -18,10 +18,10 @@ export default class MyPlugin extends Plugin {
 
 		this.registerMarkdownPostProcessor(async (element, c) => {
 			let text = element.textContent ?? "";
-			let lines = text.split('\n', Number.MAX_SAFE_INTEGER);
+			let lines = text.split("\n", Number.MAX_SAFE_INTEGER);
 			let out = createDiv({text: ""});
 			for (let line of lines) {
-				out.appendChild(createDiv({text: line, attr: {style: `text-indent:${this.settings.indentWidth}px`}}))
+				out.appendChild(createDiv({text: "\t" + line, attr: {style: `tab-size:${this.settings.indentWidth}; white-space:pre-wrap`}}))
 			}
 			element.replaceChildren(out);
 		});
